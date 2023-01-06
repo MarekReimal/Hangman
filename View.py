@@ -1,5 +1,8 @@
+from datetime import datetime, timedelta
 from tkinter import *
 import tkinter.font as tkfont  # tkfont on alias
+from tkinter import ttk
+
 from PIL import Image, ImageTk # on vaja poomis piltide kasutamsieks, PIL vaja installida> vali alt+enter install Pil 2. rida
 
 class View(Tk):
@@ -77,12 +80,18 @@ class View(Tk):
 
     def create_all_buttons(self):  # osad nupud vaja ka tagastada, üks nupp on paigal ja rohkem ei puutu
         # New Game nupp
-        btn_new = Button(self.frame_top, text='New Game', font=self.default_style)  # frame top on muutuja ülevalt
-        Button(self.frame_top, text='Leaderboard', font=self.default_style).grid(row=0, column=1, padx=5, pady=2,  # grid teeb paigutuse
+        btn_new = Button(self.frame_top, text='New Game', font=self.default_style, command=self.controller.click_btn_new)  # frame top on muutuja ülevalt
+        Button(self.frame_top, text='Leaderboard', font=self.default_style,
+               command=self.controller.click_btn_leaderboard).grid(row=0, column=1, padx=5, pady=2,  # grid teeb paigutuse
                                                                                  sticky=EW)  # see nupp ei muutu staatuselt (ei muutu halliks) saab
                                                                                             # alati klikkida selle pärast ei ole muutujas
-        btn_cancel = Button(self.frame_top, text='Cancel', font=self.default_style, state='disabled')  # mängu alguses ei saa klikkida state disabled
-        btn_send = Button(self.frame_top, text='Send', font=self.default_style, state='disabled')  # mängu alguses ei saa klikkida state disabled
+        btn_cancel = Button(self.frame_top, text='Cancel', font=self.default_style, state='disabled',
+                            command=self.controller.click_btn_cancel)  # mängu alguses ei saa klikkida state disabled
+                                                # command= KKKKKÜÜÜÜSIMUUSSSS command= käivitab funkts, kui nupule vajutada
+                                                # kui command= on puudu siis nupp ei tee midagi
+                                                # kui tahad funkt midagi kaasa anda siis vaja lamdat kasutada
+        btn_send = Button(self.frame_top, text='Send', font=self.default_style, state='disabled',
+                          command=self.controller.click_btn_send)  # mängu alguses ei saa klikkida state disabled
                                             # font= stiilid on defineeritud konstruktoris
         # Nuppude paigutus ekraanile
         btn_new.grid(row=0, column=0, padx=5, pady=2, sticky=EW)  # kõik nupud mis on framel paigutatakse gridiga
@@ -116,3 +125,63 @@ class View(Tk):
         char_input.grid(row=1, column=1, padx=5, pady=2)
 
         return char_input
+
+    def change_image(self, image_id):  # vaja teada mitmendat pilti on vaja
+        self.image = ImageTk.PhotoImage(Image.open(self.model.image_files[image_id]))  # mitmes pilt listist võtta
+        # vt funkt create_all_labels rida 107 seal luuakse label_image
+        self.label_image.configure(image=self.image)  # seadistab pildi aga ei näita
+        self.label_image.image = self.image  # muudab pildi ekraanil näitab pilti
+
+    # loome hüpikakna mille peale tabelit luuakse
+    def create_popup_window(self):
+        top = Toplevel(self)
+        top.geometry('500x180')
+        top.resizable(False, False)
+        top.grab_set()  # alumist akent ei saa näppida kuni pealmine on kinni pandud
+        top.focus()
+
+        frame = Frame(top)
+        frame.pack(expand=True, fill=BOTH)
+        self.center(top)  # ekraani keskel üleval aknas
+        # tegime akna , akna peale pannakse frame ja frame tagastatakse
+        return frame
+
+    def generate_leaderboard(self, frame, data):
+        # tabeli vaade
+        my_table = ttk.Treeview(frame)  # from tkinter import ttk
+
+        # vertikaalne kerimis riba
+        vsb = ttk.Scrollbar(frame, orient='vertical', command=my_table.yview)
+        vsb.pack(side='right', fill='y')
+        my_table.configure(yscrollcommand=vsb.set)
+
+        # columns id
+        my_table['columns'] = ('date_time', 'name', 'word', 'misses', 'game_time')
+
+        # veergude omadused
+        my_table.column('#0', width=0, stretch=NO)  # esimene veerg on peidetud veerg
+        my_table.column('date_time', anchor=CENTER, width=90)
+        my_table.column('name', anchor=CENTER, width=90)
+        my_table.column('word', anchor=CENTER, width=90)
+        my_table.column('misses', anchor=CENTER, width=90)
+        my_table.column('game_time', anchor=CENTER, width=90)
+
+        # tabeli päised
+        my_table.heading('#0', text='', anchor=CENTER)
+        my_table.heading('date_time', text='Date', anchor=CENTER)
+        my_table.heading('name', text='Player', anchor=CENTER)
+        my_table.heading('word', text='Word', anchor=CENTER)
+        my_table.heading('misses', text='Wrong letters', anchor=CENTER)
+        my_table.heading('game_time', text='Time', anchor=CENTER)
+
+        # lisa andmed tabelisse
+        x = 0
+        for p in data:
+            dt = datetime.strptime(p.date, '%Y-%m-%d %H:%M:%S').strftime('%d.%m.%Y %T')  # kuupäev luda ja vormistada teistpidi
+            # info lisada tabelisse
+            my_table.insert(parent='', index='end', iid=str(x), text='', values=(dt, p.name, p.word, p.misses,
+                                                                                 str(timedelta(seconds=p.time))))  # index end lisab tabeli lõppu
+            x += 1
+
+        # kogu tabel on vaja frame peale panna
+        my_table.pack(expand=True, fill=BOTH)

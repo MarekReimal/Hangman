@@ -1,0 +1,3 @@
+2023-01-06 15:07:44;kuku;Bussijuht;;15
+2023-01-06 16:10:30;mukk;Kortermaja;;25
+2023-01-06 16:37:26;rokk;Suvila;X, D, F;42
