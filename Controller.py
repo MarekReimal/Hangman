@@ -8,12 +8,15 @@ class Controller:
 
     def __init__(self):
         self.model = Model()
-        self.view = View(self, self.model)
+        self.view = View(self, self.model) # kaasa controller ja model
         self.gametime = GameTime(self.view.lbl_time)  # label kaasa mille peal aega näidatakse
 
 
     def main(self):
         self.view.main()
+
+    def click_btn_end(self):
+        pass
 
     # kui vajutatakse uue mängu nupule
     # mis nupud lähevad peitu ja mis tulevad välja

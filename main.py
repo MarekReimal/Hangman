@@ -10,6 +10,7 @@ class Hangman:
 
 
 if __name__ == '__main__':
+    # print ("File1 __name__ = ", __name__)
     Hangman()
 
 

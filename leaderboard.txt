@@ -1,3 +1,8 @@
 2023-01-06 15:07:44;kuku;Bussijuht;;15
 2023-01-06 16:10:30;mukk;Kortermaja;;25
 2023-01-06 16:37:26;rokk;Suvila;X, D, F;42
+2023-01-16 23:31:02;dd;Suvila;X, D, K;32
+2023-01-28 23:43:57;UNKNOWN;Bussijuht;3xZ, 2xX, C, G, 2xK, W, R;68
+2023-01-28 23:49:32;UNKNOWN;Bussijuht;2xW, 2xR, G, 2xX;239
+2023-01-29 00:10:24;UNKNOWN;Bussijuht;2xA, 2xD, R, 2xF, G;78
+2023-01-29 21:55:59;UNKNOWN;Elumaja;2xX, D, 2xS, T, I, V, K;79

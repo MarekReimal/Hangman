@@ -47,7 +47,7 @@ class View(Tk):
 
 
     @staticmethod
-    def center(win):  # muutumatu unkts
+    def center(win):  # muutumatu funkts
         """
         https://stackoverflow.com/questions/3352918/how-to-center-a-window-on-the-screen-in-tkinter
         centers a tkinter window
@@ -93,6 +93,9 @@ class View(Tk):
         btn_send = Button(self.frame_top, text='Send', font=self.default_style, state='disabled',
                           command=self.controller.click_btn_send)  # mängu alguses ei saa klikkida state disabled
                                             # font= stiilid on defineeritud konstruktoris
+        # Button(self.frame_top, text='End', font=self.default_style,
+                            #command=self.controller.click_btn_end).grid(row=0, column=3, padx=5, pady=2,
+                                                                                 #sticky=EW) # Lõpetab mängu
         # Nuppude paigutus ekraanile
         btn_new.grid(row=0, column=0, padx=5, pady=2, sticky=EW)  # kõik nupud mis on framel paigutatakse gridiga
         btn_cancel.grid(row=0, column=2, padx=5, pady=2, sticky=EW)  # kõik nupud mis on framel paigutatakse gridiga
