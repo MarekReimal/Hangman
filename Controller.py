@@ -34,7 +34,7 @@ class Controller:
         self.model.start_new_game()  # Alustab uut mängu
         self.view.lbl_result.configure(text=self.model.user_word)  # näitab kriipsudega sõna
         self.view.lbl_error.configure(text='Wrong 0 letter(s)', fg='black')  #  Teksti värv mustaks tagasi
-        self.view.char_input.focus()
+        self.view.char_input.focus()  # pane teksti kursor kasti
         self.gametime.reset()  # resetib aja
         self.gametime.start()  # alustab aja lugemist
 
@@ -51,18 +51,20 @@ class Controller:
         self.view.change_image(len(self.model.image_files)-1)
 
     def click_btn_send(self):  # mida kasutaja on sisestanud, siin kutsub välja, toimetab mudelis
+        # kävitab model.get_user_input ja annab kaasa tähe labeli pealt
         self.model.get_user_input(self.view.userinput.get().strip())  #võtab vormilt info ja alguset ja lõpust võtab tühikud ära. get on vaja et info võtta
         self.view.lbl_result.configure(text=self.model.user_word)  # muudab labelil olevat osa
         self.view.lbl_error.configure(text=f'Wrong {self.model.counter} letters. {self.model.get_all_user_chars()} ')
         # kasutaja sisestus tuleb tühaks teha
-        self.view.char_input.delete(0, 'end')  # kustutab esimesest kuni lõpuni
+        self.view.char_input.delete(0, 'end')  # kustutab kastist esimesest kuni lõpuni
         if self.model.counter > 0:
             self.view.lbl_error.configure(fg='red')  # tähe värv
             self.view.change_image(self.model.counter)  # counter ütleb mitmes pilt võtta
-        self.is_game_over()
+        self.is_game_over()  # kontroll kas mäng läbi meetod ↓
 
     def is_game_over(self):  # alg seis taastatakse
         if self.model.counter >= 11 or '_' not in self.model.user_word or self.model.counter >= (len(self.model.image_files)-1): #counter loendab pilte, pilte on 11, kui viimane pilt on, siis järelikult on mäng läbi
+            # kui mäng on läbi
             self.gametime.stop()  # aeg seisma
             self.view.btn_new['state'] = 'normal'
             self.view.btn_cancel['state'] = 'disable'
@@ -71,8 +73,10 @@ class Controller:
             # küsi kasutaja nime
             player_name = simpledialog.askstring('Game over', 'What is the player\'s name', parent=self.view)  # askstring on valmis box küsimiseks
             # askstring vajab argumente päise info, info kasutajale
+            # print(player_name)  # näitab cancel nupu vajutust
             self.model.set_player_name(player_name, self.gametime.counter)
             self.view.change_image(len(self.model.image_files)-1)
+            # siit jääb ootele mida kasutaja edasi teeb
 
     def click_btn_leaderboard(self):
         # kas on olemas ja kas ta on fail
@@ -81,7 +85,7 @@ class Controller:
             # tekita aken
             popup_window = self.view.create_popup_window()
             data = self.model.read_leaderboard_file_contents()
-            self.view.generate_leaderboard(popup_window, data)
+            self.view.generate_leaderboard(popup_window, data)  # peale back käsku tekib ekraanile info
 
         else:
             messagebox.showwarning('Message', 'Edetabeli fail on puudu, \nMängi esmalt!')  # messile vaja teh tk import

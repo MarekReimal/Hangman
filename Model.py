@@ -97,10 +97,11 @@ class Model:
     def get_all_user_chars(self):  # on list aga tahem et oleks string iga tähe jätrgi oleks koma ja tühik
         return ', '.join(self.all_user_chars)
 
-    def set_player_name(self, name, seconds):
+    def set_player_name(self, name, seconds):  # küsib kasutajalt nime
         line = []  # siia lisatakse
         now = datetime.now().strftime('%Y-%m-%d %T')  # %T on sama mis kella aeg %H:%M:%S
-        if name.strip():  # kas kastaja on nime sisestanud
+        if name is not None: # .strip():  # kas kastaja on nime sisestanud, kui vajutatakse cancel siis viga ei teavita is not None
+                                # None on siis kui vajutatakse cancel
             self.player_name = name.strip()
 
         line.append(now)  # aeg
@@ -108,7 +109,7 @@ class Model:
         line.append(self.new_word)  # sõna
         line.append(self.get_all_user_chars())  # kõik valed tähed
         line.append(str(seconds))  # aeg sekundites
-
+        # avab teksti faili, a+ teeb ka faili kui vaja
         with open(self.leaderboard_file, 'a+', encoding='utf-8') as f:
             f.write(';'.join(line) + '\n')
 
@@ -121,7 +122,7 @@ class Model:
         for line in all_lines:
             parts = line.strip().split(';')
             empty_list.append((Leaderboard(parts[0], parts[1], parts[2], parts[3], int(parts[4]))))  # parts4 on aeg ja peab olema int
-        self.score_data = sorted(empty_list, key=lambda x: x.time, reverse=False)  # sorteerib aja järgi,
+        self.score_data = sorted(empty_list, key=lambda x: x.time, reverse=False)  # sorteerib aja järgi, mis aeg on kõige lühem
         # x.time võib asendada ka indeksiga mitmenda järgi sorteerida tahad
 
-        return self.score_data
+        return self.score_data # tagastab kontrollerisse

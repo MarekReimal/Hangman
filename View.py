@@ -48,7 +48,7 @@ class View(Tk):
 
 
     def main(self):
-        self.mainloop()  # GUI lõpulause mis hoiab akent ees
+        self.mainloop()  # GUI lõpulause mis hoiab akent ees, jääb ootele mida kasutaja teeb
 
 
     @staticmethod
@@ -142,10 +142,11 @@ class View(Tk):
 
     # loome hüpikakna mille peale tabelit luuakse
     def create_popup_window(self):
+        # teeb akna
         top = Toplevel(self)
         top.geometry('500x180')
         top.resizable(False, False)
-        top.grab_set()  # alumist akent ei saa näppida kuni pealmine on kinni pandud
+        top.grab_set()  # alumist akent ei saa näppida kuni pealmine on kinni pandud, modal window variant
         top.focus()
 
         frame = Frame(top)
@@ -155,41 +156,43 @@ class View(Tk):
         return frame
 
     def generate_leaderboard(self, frame, data):
-        # tabeli vaade
-        my_table = ttk.Treeview(frame)  # from tkinter import ttk
+        if len(data) > 0:  # kui failis on andmed siis teeb, kui tabel on tühi siis ei
+            # tabeli vaade
+            my_table = ttk.Treeview(frame)  # from tkinter import ttk
 
-        # vertikaalne kerimis riba
-        vsb = ttk.Scrollbar(frame, orient='vertical', command=my_table.yview)
-        vsb.pack(side='right', fill='y')
-        my_table.configure(yscrollcommand=vsb.set)
+            # vertikaalne kerimis riba
+            vsb = ttk.Scrollbar(frame, orient='vertical', command=my_table.yview)
+            vsb.pack(side='right', fill='y')
+            my_table.configure(yscrollcommand=vsb.set)
 
-        # columns id
-        my_table['columns'] = ('date_time', 'name', 'word', 'misses', 'game_time')
+            # columns id
+            my_table['columns'] = ('date_time', 'name', 'word', 'misses', 'game_time')
 
-        # veergude omadused
-        my_table.column('#0', width=0, stretch=NO)  # esimene veerg on peidetud veerg
-        my_table.column('date_time', anchor=CENTER, width=90)
-        my_table.column('name', anchor=CENTER, width=90)
-        my_table.column('word', anchor=CENTER, width=90)
-        my_table.column('misses', anchor=CENTER, width=90)
-        my_table.column('game_time', anchor=CENTER, width=90)
+            # veergude omadused
+            my_table.column('#0', width=0, stretch=NO)  # esimene veerg on peidetud veerg
+            my_table.column('date_time', anchor=CENTER, width=90)
+            my_table.column('name', anchor=CENTER, width=90)
+            my_table.column('word', anchor=CENTER, width=90)
+            my_table.column('misses', anchor=CENTER, width=90)
+            my_table.column('game_time', anchor=CENTER, width=90)
 
-        # tabeli päised
-        my_table.heading('#0', text='', anchor=CENTER)
-        my_table.heading('date_time', text='Date', anchor=CENTER)
-        my_table.heading('name', text='Player', anchor=CENTER)
-        my_table.heading('word', text='Word', anchor=CENTER)
-        my_table.heading('misses', text='Wrong letters', anchor=CENTER)
-        my_table.heading('game_time', text='Time', anchor=CENTER)
+            # tabeli päised
+            my_table.heading('#0', text='', anchor=CENTER)  # peidetud veerg on vaja
+            my_table.heading('date_time', text='Date', anchor=CENTER)
+            my_table.heading('name', text='Player', anchor=CENTER)
+            my_table.heading('word', text='Word', anchor=CENTER)
+            my_table.heading('misses', text='Wrong letters', anchor=CENTER)
+            my_table.heading('game_time', text='Time', anchor=CENTER)
 
-        # lisa andmed tabelisse
-        x = 0
-        for p in data:
-            dt = datetime.strptime(p.date, '%Y-%m-%d %H:%M:%S').strftime('%d.%m.%Y %T')  # kuupäev luda ja vormistada teistpidi
-            # info lisada tabelisse
-            my_table.insert(parent='', index='end', iid=str(x), text='', values=(dt, p.name, p.word, p.misses,
-                                                                                 str(timedelta(seconds=p.time))))  # index end lisab tabeli lõppu
-            x += 1
+            # lisa andmed tabelisse
+            x = 0
+            for p in data:
+                dt = datetime.strptime(p.date, '%Y-%m-%d %H:%M:%S').strftime('%d.%m.%Y %T')  # kuupäev luda ja vormistada teistpidi
+                # info lisada tabelisse
+                my_table.insert(parent='', index='end', iid=str(x), text='', values=(dt, p.name, p.word, p.misses,
+                                                                                     str(timedelta(seconds=p.time))))  # index end lisab tabeli lõppu
+                #3 dt kuupäev nimi, sõna, aeg delta teeb numbri ajaks
+                x += 1
 
-        # kogu tabel on vaja frame peale panna
-        my_table.pack(expand=True, fill=BOTH)
+            # kogu tabel on vaja frame peale panna, ilma selleta framele ei pane
+            my_table.pack(expand=True, fill=BOTH)

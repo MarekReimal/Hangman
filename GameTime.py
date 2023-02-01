@@ -8,7 +8,7 @@ class GameTime:
         self.counter = 0  # loeb kulunud aega
         self.running = False
 
-    def update(self):
+    def update(self):  # iga sekundi tagant numbri väärtus kasvab
         if self.running:
             if self.counter == 0:
                 display = '0:00:00'
@@ -23,10 +23,10 @@ class GameTime:
 
     def start(self):  # aja lugemise käivitamine
         self.running = True
-        self.update()
+        self.update()  # kutsub meetodi
 
     def stop(self):  # peatab aja lugemise
-        self.running = False
+        self.running = False  # siis update enam ei kävitu
 
     def reset(self):  # aja lugemise reset
         self.counter = 0

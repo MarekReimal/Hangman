@@ -13,6 +13,7 @@ class Hangman:
 
 
 if __name__ == '__main__':
+    db_name = None
     # print ("File1 __name__ = ", __name__)
 
     #vaja kontrollida kas käsurealt on db nimi antud
