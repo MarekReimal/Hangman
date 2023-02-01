@@ -9,7 +9,7 @@ class Model:
 
 
     def __init__(self):
-        self.database_name = 'databases/hangman_words_ee.db'  #
+        self.database_name = 'databases/hangman_words_ee.db'  #  kui edit configuration parameters on teine fail kirjas siis võetakse see
         self.image_files = glob.glob('images/*.png')  # Loeb pildifailid listina mällu
         # New game
         self.new_word = None  # juhuslik sõna andmebaasist
@@ -36,7 +36,7 @@ class Model:
         for x in range(len(self.new_word)):  # loendab sõnas tähti
             self.user_word.append('_')  # Asendab kriipsudega
 
-        # print(self.new_word)  # Test nätab sõna
+        print(self.new_word)  # Test nätab sõna
         # print(self.user_word)  # Test näitab sõna asemel kriipse
 
     #andmebaasiga ühenduse tekitamine

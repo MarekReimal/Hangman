@@ -1,13 +1,17 @@
-from tkinter import simpledialog
+from tkinter import simpledialog, messagebox
 from GameTime import GameTime
 from Model import Model
 from View import View
+from os import path  # os'ist impordi path'i
 
 
 class Controller:
 
-    def __init__(self):
+    def __init__(self, db_name=None):  # db_nimi võib olla ka uus nimi või tühi, vaikimisi on db nimi none
         self.model = Model()
+        if db_name is not None:  # kui db nimi on siis muudetakse nimi ära
+            self.model.database_name = db_name  #  db nimi muudetud
+
         self.view = View(self, self.model) # kaasa controller ja model
         self.gametime = GameTime(self.view.lbl_time)  # label kaasa mille peal aega näidatakse
 
@@ -71,7 +75,13 @@ class Controller:
             self.view.change_image(len(self.model.image_files)-1)
 
     def click_btn_leaderboard(self):
-        # tekita aken
-        popup_window = self.view.create_popup_window()
-        data = self.model.read_leaderboard_file_contents()
-        self.view.generate_leaderboard(popup_window, data)
+        # kas on olemas ja kas ta on fail
+        if path.exists(self.model.leaderboard_file) and path.isfile(self.model.leaderboard_file):
+
+            # tekita aken
+            popup_window = self.view.create_popup_window()
+            data = self.model.read_leaderboard_file_contents()
+            self.view.generate_leaderboard(popup_window, data)
+
+        else:
+            messagebox.showwarning('Message', 'Edetabeli fail on puudu, \nMängi esmalt!')  # messile vaja teh tk import

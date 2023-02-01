@@ -41,6 +41,11 @@ class View(Tk):
         self.lbl_error, self.lbl_time, self.lbl_result = self.create_all_labels()
         self.char_input = self.create_input_entry()  # send nupu kõrval olev teksti kast
 
+        # enter klahviga saab send nuppu käivitada
+        # self.bind('<Return>', lambda event: self.controller.click_btn_send())  # event võib olla suvaline nimi, send() sulud peavad olema
+        # '<Return>' on klahvi nimi, mis määrab millinse klahviga klaviatuurilt saab nuppu vajutada
+        # probleem, et klahvi vajutus mõjub kogu aknale, vaja teha kontroll, kas mäng käib, siis võiks töötada
+
 
     def main(self):
         self.mainloop()  # GUI lõpulause mis hoiab akent ees
